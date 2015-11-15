@@ -34,6 +34,9 @@
     | House1
     | House2
     | House3
+    | Temple1
+    | Temple2
+    | Temple3
     with 
       member tile.Rectangle =
         match tile with
@@ -43,8 +46,39 @@
         | House1        -> Rectangle(579, 596, 626-579, 651-596)
         | House2        -> Rectangle(543, 423, 597-543, 482-423)
         | House3        -> Rectangle(488, 432, 541-488, 476-432)
+        | Temple1       -> Rectangle(532, 812, 616-531, 892-812)
+        | Temple2       -> Rectangle(662, 804, 740-662, 892-804)
+        | Temple3       -> Rectangle(809, 376, 892-809, 501-376)
+      member tile.Scale =
+        match tile with
+        | SmallCondo1   -> 1.0f
+        | SmallCondo2   -> 1.0f
+        | SmallCondo3   -> 1.0f
+        | House1        -> 1.0f
+        | House2        -> 1.0f
+        | House3        -> 1.0f
+        | Temple1       -> 1.7f
+        | Temple2       -> 1.7f
+        | Temple3       -> 1.9f
+      member tile.Offset =
+        match tile with
+        | SmallCondo1   -> 0,0
+        | SmallCondo2   -> 0,0
+        | SmallCondo3   -> 0,0
+        | House1        -> 0,0
+        | House2        -> 0,0
+        | House3        -> 0,0
+        | Temple1       -> 5,8
+        | Temple2       -> 5,8
+        | Temple3       -> 6,9
       static member draw((tileset:Texture2D),(sb:SpriteBatch),(px,py,sx,sy),(t:Building)) =
-        sb.Draw(tileset, Rectangle(px,py,sx,sy), System.Nullable(t.Rectangle), Color.White)
+        let scale = t.Scale
+        let ox,oy = t.Offset
+        sb.Draw(tileset, 
+          Rectangle(px - ox,
+                    py - oy,
+                    int(float32 sx * t.Scale),
+                    int(float32 sy * t.Scale)), System.Nullable(t.Rectangle), Color.White)
       static member draw((tileset:Texture2D),(sb:SpriteBatch),(p:Vector2),(t:Building)) =
         sb.Draw(tileset, p, System.Nullable(t.Rectangle), Color.White)
 

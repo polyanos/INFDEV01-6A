@@ -8,12 +8,14 @@
        - Vector2 * IEnumerable<Vector2> -> IEnumerable<Vector2>
        - evidenziare graficamente l'oggetto selezionato e quelli da sortare
        - ricevere la lista sortata e mostra l'indice per distanza in sovraimpressione sull'edificio
-    2. data una casa e un ospedale, trova lo shortest path tra i due
-       - Vector2 * Vector2 * IEnumerable<Vector2 * Vector2> -> IEnumerable<Vector2>
+    2. dati gli special buildings e una distanza k, poi data una casa ritorna gli s.b. entro k
+       - IEnumerable<Vector2> * IEnumerable<Vector2 * float> -> IEnumerable<IEnumerable<Vector2>>
+    3. data una casa e un ospedale, trova lo shortest path tra i due
+       - Vector2 * Vector2 * IEnumerable<Vector2 * Vector2> -> IEnumerable<Vector2 * Vector2>
        - evidenziare graficamente i due edifici
        - evidenziare graficamente il percorso
-    3. data una casa, trova lo shortest path tra essa e tutti gli special buildings
-       - Vector2 * IEnumerable<Vector2> * IEnumerable<Vector2 * Vector2> -> IEnumerable<IEnumerable<Vector2>>
+    4. data una casa, trova lo shortest path tra essa e tutti gli special buildings
+       - Vector2 * IEnumerable<Vector2> * IEnumerable<Vector2 * Vector2> -> IEnumerable<IEnumerable<Vector2 * Vector2>>
   three types of tiles instead of two (split GroundAndBuilding into Ground and Building)
   traffico e macchine
 
@@ -32,7 +34,9 @@
   type Transportation = Tile.Transportation
   type Road = Tile.Road
 
-  type Simulation() =
+  type Simulation(assignment:Choice<System.Func<Vector2, seq<Vector2>, seq<Vector2>>,
+                                    System.Func<seq<Vector2>, seq<Vector2 * float>, seq<seq<Vector2>>>,
+                                    System.Func<Vector2, Vector2, seq<Vector2 * Vector2>, seq<Vector2 * Vector2>>>) =
     inherit Game()
 
     member val graphics = new GraphicsDeviceManager(base.Self) with get
@@ -42,6 +46,8 @@
     val mutable tileSet : Texture2D
     [<DefaultValue>]
     val mutable roadTileSet : Texture2D
+    [<DefaultValue>]
+    val mutable crosshair : Texture2D
 
     let map_width,map_height = 96,48
     let random = System.Random()
@@ -117,10 +123,11 @@
       this.spriteBatch <- new SpriteBatch(this.GraphicsDevice)
       this.tileSet <- this.Content.Load "tileset.png"
       this.roadTileSet <- this.Content.Load "roads.jpg"
+      this.crosshair <- this.Content.Load "crosshair.png"
 
     override this.Update gt =
       let ks = Keyboard.GetState()
-      let camera_speed = 300.0f
+      let camera_speed = 100.0f
       if ks.[Keys.Escape] = KeyState.Down then
         do this.Exit()
       if ks.[Keys.A] = KeyState.Down then
@@ -153,10 +160,6 @@
           do Ground.draw(tileset,sb,(i * 16, j * 16, 16, 16),map.Ground.[i].[j])
           if map.Trees.[i].[j] then 
             do Ground.draw(tileset,sb,(i * 16, j * 16, 16, 16),Tile.Tree)
-          match map.Buildings.[i].[j] with
-          | Some tile -> 
-              do Building.draw(tileset,sb,(i * 16 + 4, j * 16 + 4, 10, 10),tile)
-          | None -> ()
       for i = 0 to map_width do
         for j = 0 to map_height do
           if full_crossings.[i].[j] then
@@ -179,6 +182,19 @@
             do Road.draw(roadTileSet,sb,(i * 16 + 2, j * 16 - 2, 12, 4),Road.Two1)
           elif j' = j + 1 then
             do Road.draw(roadTileSet,sb,(i * 16 - 2, j * 16 + 2, 4, 12),Road.Two2)
+      for i = 0 to map_width do
+        for j = 0 to map_height do
+          match map.Buildings.[i].[j] with
+          | Some tile -> 
+              do Building.draw(tileset,sb,(i * 16 + 4, j * 16 + 4, 10, 10),tile)
+          | None -> ()
+
+      for ((i,j),(i',j')) in map.Roads do
+        sb.Draw(this.crosshair, Rectangle(i * 16 - 4, j * 16 - 4, 8, 8), Color.White)
+      for i = 0 to map_width do
+        for j = 0 to map_height do
+          if i % 16 = 0 && j % 16 = 0 then
+            sb.Draw(this.crosshair, Rectangle(i * 16 + 0, j * 16 + 0, 16, 16), Color.White)
       planes <-
         [
           for p in planes do
@@ -192,3 +208,7 @@
       do sb.End()
 
       base.Draw(gt)
+
+  let RunAssignment1 implementation = new Simulation(Choice1Of3 implementation)
+  let RunAssignment2 implementation = new Simulation(Choice2Of3 implementation)
+  let RunAssignment3 implementation = new Simulation(Choice3Of3 implementation)

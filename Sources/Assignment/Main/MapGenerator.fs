@@ -39,20 +39,29 @@ let generate_map map_width map_height =
           [| for j = 0 to map_height do
                 yield
                   if ground_tiles.[i].[j] = Tile.Cement then
-                    if abitation_density.[i].[j] < 70.0f then
+                    let temple_density = int((100.0f - abitation_density.[i].[j]) * 0.5f) |> max 4 |> min 32
+                    if i % temple_density = 0 && j % temple_density = 0 then
                       if (i * i - j) % 3 = 0 then
-                        Some Tile.House1
+                        Some Tile.Temple1
                       elif (i * i - j) % 3 = 1 then
-                        Some Tile.House2
-                      else
-                        Some Tile.House3
+                        Some Tile.Temple2
+                      else 
+                        Some Tile.Temple3
                     else
-                      if (i * i - j) % 3 = 0 then
-                        Some Tile.SmallCondo1
-                      elif (i * i - j) % 3 = 1 then
-                        Some Tile.SmallCondo2
+                      if abitation_density.[i].[j] < 70.0f then
+                        if (i * i - j) % 3 = 0 then
+                          Some Tile.House1
+                        elif (i * i - j) % 3 = 1 then
+                          Some Tile.House2
+                        else
+                          Some Tile.House3
                       else
-                        Some Tile.SmallCondo3
+                        if (i * i - j) % 3 = 0 then
+                          Some Tile.SmallCondo1
+                        elif (i * i - j) % 3 = 1 then
+                          Some Tile.SmallCondo2
+                        else
+                          Some Tile.SmallCondo3
                   else
                     None |]
     |]
