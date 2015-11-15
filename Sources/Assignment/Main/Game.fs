@@ -1,24 +1,7 @@
 ﻿module VirtualCity
   (*
   TODO:
-
-  edifici civici (ospedali/polizia)
-  algoritmi dell'utente e gestione dell'input
-    1. data una casa scelta da noi, ordinare per distanza ogni altra special building
-       - Vector2 * IEnumerable<Vector2> -> IEnumerable<Vector2>
-       - evidenziare graficamente l'oggetto selezionato e quelli da sortare
-       - ricevere la lista sortata e mostra l'indice per distanza in sovraimpressione sull'edificio
-    2. dati gli special buildings e una distanza k, poi data una casa ritorna gli s.b. entro k
-       - IEnumerable<Vector2> * IEnumerable<Vector2 * float> -> IEnumerable<IEnumerable<Vector2>>
-    3. data una casa e un ospedale, trova lo shortest path tra i due
-       - Vector2 * Vector2 * IEnumerable<Vector2 * Vector2> -> IEnumerable<Vector2 * Vector2>
-       - evidenziare graficamente i due edifici
-       - evidenziare graficamente il percorso
-    4. data una casa, trova lo shortest path tra essa e tutti gli special buildings
-       - Vector2 * IEnumerable<Vector2> * IEnumerable<Vector2 * Vector2> -> IEnumerable<IEnumerable<Vector2 * Vector2>>
-  three types of tiles instead of two (split GroundAndBuilding into Ground and Building)
-  traffico e macchine
-
+  cars in the city
   *)
 
 
@@ -35,8 +18,9 @@
   type Road = Tile.Road
 
   type Simulation(assignment:Choice<System.Func<Vector2, seq<Vector2>, seq<Vector2>>,
-                                    System.Func<seq<Vector2>, seq<Vector2 * float>, seq<seq<Vector2>>>,
-                                    System.Func<Vector2, Vector2, seq<Vector2 * Vector2>, seq<Vector2 * Vector2>>>) =
+                                    System.Func<seq<Vector2>, seq<Vector2 * float32>, seq<seq<Vector2>>>,
+                                    System.Func<Vector2, Vector2, seq<Vector2 * Vector2>, seq<Vector2 * Vector2>>,
+                                    System.Func<Vector2, seq<Vector2>, seq<Vector2 * Vector2>, seq<seq<Vector2 * Vector2>>>>) =
     inherit Game()
 
     member val graphics = new GraphicsDeviceManager(base.Self) with get
@@ -48,6 +32,10 @@
     val mutable roadTileSet : Texture2D
     [<DefaultValue>]
     val mutable crosshair : Texture2D
+    [<DefaultValue>]
+    val mutable consolas : SpriteFont
+    [<DefaultValue>]
+    val mutable circle : Texture2D
 
     let map_width,map_height = 96,48
     let random = System.Random()
@@ -57,6 +45,77 @@
     let clamp (a:float32) b c = MathHelper.Clamp(a,b,c)
 
     let map = MapGenerator.generate_map map_width map_height
+
+    let big_markers, small_markers, (numberedMarkers:List<(int*Vector2)*Color>), (numberedFloatMarkers:List<(float32*Vector2)*Color>), circles = 
+      let houses : List<Vector2> = 
+        [
+          for i = 0 to map_width do
+            for j = 0 to map_height do
+              match map.Buildings.[i].[j] with
+              | Some Building.House1 | Some Building.House2 | Some Building.House3
+              | Some Building.SmallCondo1 | Some Building.SmallCondo2 | Some Building.SmallCondo3 -> 
+                yield Vector2(float32 i,float32 j)
+              | _ -> ()
+        ]
+      let specialBuildings : List<Vector2> =
+        [
+          for i = 0 to map_width do
+            for j = 0 to map_height do
+              match map.Buildings.[i].[j] with
+              | Some Building.Temple1 | Some Building.Temple2 | Some Building.Temple3 -> 
+                yield Vector2(float32 i,float32 j)
+              | _ -> ()
+        ]
+      let roads : List<Vector2 * Vector2> = 
+        [
+          for (i_a,j_a),(i_b,j_b) in map.Roads do
+            yield Vector2(float32 i_a,float32 j_a), Vector2(float32 i_b,float32 j_b)
+        ]
+      match assignment with
+      | Choice1Of4 f ->
+        let startingHouse = houses.[random.Next(houses.Length)]
+        let mk_pair x y = x,y
+        [startingHouse, Color.Red], [], 
+        [ for x in f.Invoke(startingHouse, specialBuildings) |> Seq.mapi mk_pair |> List.ofSeq do 
+          yield x, Color.White ], [], [startingHouse, 2.0f]
+      | Choice2Of4 f ->
+        let housesAndDistances : List<Vector2 * float32> = 
+          [
+            for h in houses do
+              let sqr x = x * x
+              yield h, sqr(float32(random.NextDouble())) * 10.0f + 5.0f
+          ] |> List.sortBy (fun _ -> random.Next()) |> List.take 5
+        let mk_pair x y = x,y
+        let res = f.Invoke(specialBuildings, housesAndDistances) |> Seq.map (Seq.toList) |> Seq.toList
+        [ for h,_ in housesAndDistances -> h, Color.Red ] @ (res |> List.concat |> List.ofSeq |> List.map (fun x -> x,Color.Blue)), 
+          [], [], [], housesAndDistances
+      | Choice3Of4 f ->
+        let startingHouse = houses.[random.Next(houses.Length)]
+        let destinationSpecialBuilding = specialBuildings.[random.Next(specialBuildings.Length)]
+        let mk_pair x y = x,y
+        let res = f.Invoke(startingHouse, destinationSpecialBuilding, roads) |> Seq.toList |> List.mapi mk_pair
+        [startingHouse, Color.Red; destinationSpecialBuilding, Color.Blue], 
+          [ 
+            for i,(p,p') in res do
+            let d = p'-p
+            for a = 0 to 3 do
+            yield p + d * (float32 a / 4.0f),Color.Lerp(Color.Red, Color.Blue, float32 i / float32(res.Length-1))
+          ], [], [], [startingHouse, 2.0f]
+      | Choice4Of4 f ->
+        let startingHouse = houses.[random.Next(houses.Length)]
+        let mk_pair x y = x,y
+        let specialBuildings = specialBuildings |> List.sortBy (fun _ -> random.Next()) |> List.take 5
+        let res = f.Invoke(startingHouse, specialBuildings, roads) |> Seq.map Seq.toList |> Seq.toList
+        [startingHouse, Color.Red] @ (specialBuildings |> List.map (fun x -> x,Color.Blue)), 
+          [
+            for l in res do
+            for i,(p,p') in l |> List.mapi mk_pair do
+            let d = p'-p
+            for a = 0 to 3 do
+            yield p + d * (float32 a / 4.0f),Color.Lerp(Color.Red, Color.Blue, float32 i / float32(l.Length-1))
+          ], [], [], 
+          [startingHouse, 2.0f]
+
     let full_crossings =
       [| for i = 0 to map_width do
            yield [|
@@ -124,10 +183,12 @@
       this.tileSet <- this.Content.Load "tileset.png"
       this.roadTileSet <- this.Content.Load "roads.jpg"
       this.crosshair <- this.Content.Load "crosshair.png"
+      this.consolas <- this.Content.Load "numberingFont"
+      this.circle <- this.Content.Load "circle.png"
 
     override this.Update gt =
       let ks = Keyboard.GetState()
-      let camera_speed = 100.0f
+      let camera_speed = MathHelper.SmoothStep(300.0f, 10.0f, (zoom - 1.0f) / 4.0f)
       if ks.[Keys.Escape] = KeyState.Down then
         do this.Exit()
       if ks.[Keys.A] = KeyState.Down then
@@ -142,10 +203,10 @@
         zoom <- zoom + 10.0f * gt.DT
       if ks.[Keys.X] = KeyState.Down then
         zoom <- zoom - 10.0f * gt.DT
-      zoom <- clamp zoom 4.0f 4.0f
+      zoom <- clamp zoom 1.0f 5.0f
       let screen_width,screen_height = float32 this.GraphicsDevice.Viewport.Width, float32 this.GraphicsDevice.Viewport.Height
-      camera_x <- clamp camera_x 0.0f (float32 map_width * 16.0f - screen_width / 4.0f + 16.0f)
-      camera_y <- clamp camera_y 0.0f (float32 map_height * 16.0f - screen_height / 4.0f + 16.0f)
+      camera_x <- clamp camera_x 0.0f ((float32 map_width * 16.0f - screen_width / 4.0f + 16.0f) * zoom)
+      camera_y <- clamp camera_y 0.0f ((float32 map_height * 16.0f - screen_height / 4.0f + 16.0f) * zoom)
       base.Update(gt)
 
     override this.Draw gt =
@@ -189,12 +250,42 @@
               do Building.draw(tileset,sb,(i * 16 + 4, j * 16 + 4, 10, 10),tile)
           | None -> ()
 
-      for ((i,j),(i',j')) in map.Roads do
-        sb.Draw(this.crosshair, Rectangle(i * 16 - 4, j * 16 - 4, 8, 8), Color.White)
-      for i = 0 to map_width do
-        for j = 0 to map_height do
-          if i % 16 = 0 && j % 16 = 0 then
-            sb.Draw(this.crosshair, Rectangle(i * 16 + 0, j * 16 + 0, 16, 16), Color.White)
+      for m,c in big_markers do
+        let i,j = int m.X, int m.Y
+        for d = 0 to 2 do
+          let k = 3
+          sb.Draw(this.crosshair, Rectangle(i * 16 - d * k, j * 16 - d * k, 16 + d * 2 * k, 16 + d * 2 * k), c)
+      for m,c in small_markers do
+        let i,j = int(m.X * 16.0f), int(m.Y * 16.0f)
+        sb.Draw(this.crosshair, Rectangle(i - 4, j - 4, 8, 8), c)
+      for (n,m),c in numberedMarkers do
+        let i,j = int m.X, int m.Y
+        for di = -1 to 1 do
+          for dj = -1 to 1 do
+            let a,b = float32 di, float32 dj
+            let a,b = a*0.5f,b*0.5f
+            sb.DrawString(this.consolas, string n, 
+              Vector2(float32 i * 16.0f + a, float32 j * 16.0f + b), Color.Black, 
+              0.0f, Vector2.Zero, MathHelper.SmoothStep(0.5f, 0.3f, (zoom-1.0f)/4.0f), SpriteEffects.None, 0.0f)
+        sb.DrawString(this.consolas, string n, 
+          Vector2(float32 i * 16.0f, float32 j * 16.0f), c, 
+          0.0f, Vector2.Zero, MathHelper.SmoothStep(0.5f, 0.3f, (zoom-1.0f)/4.0f), SpriteEffects.None, 0.0f)
+      for (n,m),c in numberedFloatMarkers do
+        let i,j = int m.X, int m.Y
+        for di = -1 to 1 do
+          for dj = -1 to 1 do
+            let a,b = float32 di, float32 dj
+            let a,b = a*0.5f,b*0.5f
+            sb.DrawString(this.consolas, n.ToString("#.0"), 
+              Vector2(float32 i * 16.0f + a, float32 j * 16.0f + b), Color.Black, 
+              0.0f, Vector2.Zero, MathHelper.SmoothStep(0.5f, 0.3f, (zoom-1.0f)/4.0f), SpriteEffects.None, 0.0f)
+        sb.DrawString(this.consolas, n.ToString("#.0"), 
+          Vector2(float32 i * 16.0f, float32 j * 16.0f), c, 
+          0.0f, Vector2.Zero, MathHelper.SmoothStep(0.5f, 0.3f, (zoom-1.0f)/4.0f), SpriteEffects.None, 0.0f)
+      for (p,r) in circles do
+        let r = int(r * 16.0f * 2.0f * 1.05f)
+        let i,j = int p.X, int p.Y
+        sb.Draw(this.circle, Rectangle(i * 16 - r / 2 + 8, j * 16 - r / 2 + 8, r, r), Color.White)
       planes <-
         [
           for p in planes do
@@ -209,6 +300,18 @@
 
       base.Draw(gt)
 
-  let RunAssignment1 implementation = new Simulation(Choice1Of3 implementation)
-  let RunAssignment2 implementation = new Simulation(Choice2Of3 implementation)
-  let RunAssignment3 implementation = new Simulation(Choice3Of3 implementation)
+  let RunAssignment1 implementation = new Simulation(Choice1Of4 implementation)
+  let RunAssignment2 implementation = new Simulation(Choice2Of4 implementation)
+  let RunAssignment3 implementation = new Simulation(Choice3Of4 implementation)
+  let RunAssignment4 implementation = new Simulation(Choice4Of4 implementation)
+
+
+  let random = System.Random()
+  let rec GetInitialValue() =
+    let r = random.Next(1, 6)
+    if r <= 4 then string r
+    else
+      if random.NextDouble() <= 0.1 then
+        "8==D"
+      else
+        GetInitialValue()
