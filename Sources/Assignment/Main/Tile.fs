@@ -8,13 +8,26 @@
   type Microsoft.Xna.Framework.Game with member this.Self = this
   type Microsoft.Xna.Framework.GameTime with member this.DT = this.ElapsedGameTime.TotalSeconds |> float32
 
-  type Description = 
+  type Ground = 
     | Grass
     | Sand
     | Water
     | Tree
     | Cement
-    | Plane
+    with 
+      member tile.Rectangle =
+        match tile with
+        | Grass         -> Rectangle(215, 152, 240-215, 178-152)
+        | Sand          -> Rectangle(116, 286, 134-116, 300-286)
+        | Water         -> Rectangle(134, 179, 161-134, 205-179)
+        | Tree          -> Rectangle(10, 0, (115-10)/4, 28-0)
+        | Cement        -> Rectangle(313, 188, 339-313, 214-188)
+      static member draw((tileset:Texture2D),(sb:SpriteBatch),(px,py,sx,sy),(t:Ground)) =
+        sb.Draw(tileset, Rectangle(px,py,sx,sy), System.Nullable(t.Rectangle), Color.White)
+      static member draw((tileset:Texture2D),(sb:SpriteBatch),(p:Vector2),(t:Ground)) =
+        sb.Draw(tileset, p, System.Nullable(t.Rectangle), Color.White)
+
+  type Building = 
     | SmallCondo1
     | SmallCondo2
     | SmallCondo3
@@ -24,19 +37,61 @@
     with 
       member tile.Rectangle =
         match tile with
-        | Grass         -> Rectangle(215, 152, 240-215, 178-152)
-        | Sand          -> Rectangle(116, 286, 134-116, 300-286)
-        | Water         -> Rectangle(134, 179, 161-134, 205-179)
-        | Tree          -> Rectangle(10, 0, (115-10)/4, 28-0)
-        | Cement        -> Rectangle(313, 188, 339-313, 214-188)
-        | Plane         -> Rectangle(451, 356, 538-451, 430-356)
         | SmallCondo1   -> Rectangle(508, 561, 577-508, 656-561)
         | SmallCondo2   -> Rectangle(526, 666, 601-526, 782-666)
         | SmallCondo3   -> Rectangle(601, 676, 708-601, 774-676)
         | House1        -> Rectangle(579, 596, 626-579, 651-596)
-        | House2        -> Rectangle(579, 596, 626-579, 651-596) // da trovare
-        | House3        -> Rectangle(579, 596, 626-579, 651-596) // da trovare
-      static member draw((tileset:Texture2D),(sb:SpriteBatch),(px,py,sx,sy),(t:Description)) =
+        | House2        -> Rectangle(543, 423, 597-543, 482-423)
+        | House3        -> Rectangle(488, 432, 541-488, 476-432)
+      static member draw((tileset:Texture2D),(sb:SpriteBatch),(px,py,sx,sy),(t:Building)) =
         sb.Draw(tileset, Rectangle(px,py,sx,sy), System.Nullable(t.Rectangle), Color.White)
-      static member draw((tileset:Texture2D),(sb:SpriteBatch),(p:Vector2),(t:Description)) =
+      static member draw((tileset:Texture2D),(sb:SpriteBatch),(p:Vector2),(t:Building)) =
+        sb.Draw(tileset, p, System.Nullable(t.Rectangle), Color.White)
+
+  type Transportation = 
+    | Plane
+    | Car
+    with 
+      member tile.Rectangle =
+        match tile with
+        | Plane         -> Rectangle(451, 354, 494-451, 393-354)
+        | Car           -> Rectangle(544, 363, 554-544, 369-363)
+      static member draw((tileset:Texture2D),(sb:SpriteBatch),(px,py,sx,sy),(t:Transportation)) =
+        sb.Draw(tileset, Rectangle(px,py,sx,sy), System.Nullable(t.Rectangle), Color.White)
+      static member draw((tileset:Texture2D),(sb:SpriteBatch),(p:Vector2),(t:Transportation)) =
+        sb.Draw(tileset, p, System.Nullable(t.Rectangle), Color.White)
+
+  type Road = 
+    | Two1
+    | Two2
+    | Two3
+    | Two4
+    | Curve1
+    | Curve2
+    | Curve3
+    | Curve4
+    | Three1
+    | Three2
+    | Three3
+    | Three4
+    | Four
+    with 
+      member tile.Rectangle =
+        match tile with
+        | Two1         -> Rectangle(0 * 32 * 8, 0 * 32 * 8, 8 * 32, 8 * 32)
+        | Two2         -> Rectangle(3 * 32 * 8, 0 * 32 * 8, 8 * 32, 8 * 32)
+        | Two3         -> Rectangle(0 * 32 * 8, 0 * 32 * 8, 2 * 32, 8 * 32)
+        | Two4         -> Rectangle(3 * 32 * 8, 0 * 32 * 8, 8 * 32, 2 * 32)
+        | Curve1       -> Rectangle(1 * 32 * 8, 0 * 32 * 8, 8 * 32, 8 * 32)
+        | Curve2       -> Rectangle(0 * 32 * 8, 1 * 32 * 8, 8 * 32, 8 * 32)
+        | Curve3       -> Rectangle(2 * 32 * 8, 1 * 32 * 8, 8 * 32, 8 * 32)
+        | Curve4       -> Rectangle(3 * 32 * 8, 1 * 32 * 8, 8 * 32, 8 * 32)
+        | Three1       -> Rectangle(0 * 32 * 8, 2 * 32 * 8, 8 * 32, 8 * 32)
+        | Three2       -> Rectangle(1 * 32 * 8, 2 * 32 * 8, 8 * 32, 8 * 32)
+        | Three3       -> Rectangle(2 * 32 * 8, 2 * 32 * 8, 8 * 32, 8 * 32)
+        | Three4       -> Rectangle(3 * 32 * 8, 2 * 32 * 8, 8 * 32, 8 * 32)
+        | Four         -> Rectangle(2 * 32 * 8, 0 * 32 * 8, 8 * 32, 8 * 32)
+      static member draw((tileset:Texture2D),(sb:SpriteBatch),(px,py,sx,sy),(t:Road)) =
+        sb.Draw(tileset, Rectangle(px,py,sx,sy), System.Nullable(t.Rectangle), Color.White)
+      static member draw((tileset:Texture2D),(sb:SpriteBatch),(p:Vector2),(t:Road)) =
         sb.Draw(tileset, p, System.Nullable(t.Rectangle), Color.White)
