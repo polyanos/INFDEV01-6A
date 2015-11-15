@@ -1,0 +1,51 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{ulem}
+\usepackage[official]{eurosym}
+\title{Algorithms (INFDEV026A) \\ Practical Assignments}
+\author { }
+\date { }
+\begin{document}
+\maketitle
+
+\section*{Instructions}
+\begin{itemize}[noitemsep]
+\item The assignment is individual.
+\item The assignment must be implemented using C\# or F\#.
+\item Not delivering the assignment in time implies taking the exam at the retake.
+\item Each exercise has its own deadline, which will be checked through Github commits.
+\item There will be a brief oral check on the content of the assignment.
+\end{itemize}
+
+\section*{Introduction to the framework}
+The exercises will be based on the simulation of a city, containing houses, hospitals, shops, etc. all connected by streets. The student must implement algorithms to answer some queries on the simulated city.
+
+\section*{Exercise 1 - Sorting}
+
+\textbf{Deadline}: End week 4. \\
+\textbf{Points}: 2. \\
+\textbf{Goal}: Sort all services (hospital, shops, ...) by Euclidean distance from a specified house.\\
+
+The city map is made of several infrastructures, each one with its own functionality: hospitals, police stations, houses, condos, super markets, schools. The goal of this assignment is finding the closest building of each kind to a specified house, with respect to the Euclidean distance:
+\begin{align*}
+d(house,building) = \sqrt{(x_{house} - x_{building})^{2} + (y_{house} - y_{building})^{2} } 
+\end{align*}
+\noindent
+This means we want the closest police station, super market, school, etc. from a specified house, independently on the fact that they are connected by road (everyone has his private helicopter to move around the city).
+
+In order to achieve this goal, we will sort the list of the buildings of the given type according to their distance. Any implementation not using this technique will not be accepted and evaluated. Write a function which returns
+
+\section*{Exercise 2A - Hash table}
+
+\section*{Exercise 2B - Tree}
+
+\section*{Exercise 3 - Dijkstra}
+
+\section*{Exercise 4 - Floyd Warshall}
+
+
+\end{document}
