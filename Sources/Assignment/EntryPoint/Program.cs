@@ -11,23 +11,24 @@ namespace EntryPoint
     [STAThread]
     static void Main()
     {
+      var fullscreen = false;
       read_input:
       switch (Microsoft.VisualBasic.Interaction.InputBox("Which assignment shall run next? (1, 2, 3, 4, or q for quit)", "Choose assignment", VirtualCity.GetInitialValue()))
       {
         case "1":
-          using (var game = VirtualCity.RunAssignment1(SortSpecialBuildingsByDistance))
+          using (var game = VirtualCity.RunAssignment1(SortSpecialBuildingsByDistance, fullscreen))
             game.Run();
           break;
         case "2":
-          using (var game = VirtualCity.RunAssignment2(FindSpecialBuildingsWithinDistanceFromHouse))
+          using (var game = VirtualCity.RunAssignment2(FindSpecialBuildingsWithinDistanceFromHouse, fullscreen))
             game.Run();
           break;
         case "3":
-          using (var game = VirtualCity.RunAssignment3(FindRoute))
+          using (var game = VirtualCity.RunAssignment3(FindRoute, fullscreen))
             game.Run();
           break;
         case "4":
-          using (var game = VirtualCity.RunAssignment4(FindRoutesToAll))
+          using (var game = VirtualCity.RunAssignment4(FindRoutesToAll, fullscreen))
             game.Run();
           break;
         case "q":

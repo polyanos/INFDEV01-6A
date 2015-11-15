@@ -20,10 +20,18 @@
   type Simulation(assignment:Choice<System.Func<Vector2, seq<Vector2>, seq<Vector2>>,
                                     System.Func<seq<Vector2>, seq<Vector2 * float32>, seq<seq<Vector2>>>,
                                     System.Func<Vector2, Vector2, seq<Vector2 * Vector2>, seq<Vector2 * Vector2>>,
-                                    System.Func<Vector2, seq<Vector2>, seq<Vector2 * Vector2>, seq<seq<Vector2 * Vector2>>>>) =
+                                    System.Func<Vector2, seq<Vector2>, seq<Vector2 * Vector2>, seq<seq<Vector2 * Vector2>>>>,
+                  fullscreen) =
     inherit Game()
 
-    member val graphics = new GraphicsDeviceManager(base.Self) with get
+
+    member val graphics = 
+      let g = new GraphicsDeviceManager(base.Self)
+      let screen = System.Windows.Forms.Screen.PrimaryScreen.Bounds
+      g.PreferredBackBufferWidth <- screen.Width - 128
+      g.PreferredBackBufferHeight <- screen.Height - 128
+      g.IsFullScreen <- fullscreen
+      g with get
     [<DefaultValue>]
     val mutable spriteBatch : SpriteBatch
     [<DefaultValue>]
@@ -300,10 +308,10 @@
 
       base.Draw(gt)
 
-  let RunAssignment1 implementation = new Simulation(Choice1Of4 implementation)
-  let RunAssignment2 implementation = new Simulation(Choice2Of4 implementation)
-  let RunAssignment3 implementation = new Simulation(Choice3Of4 implementation)
-  let RunAssignment4 implementation = new Simulation(Choice4Of4 implementation)
+  let RunAssignment1 implementation fullscreen = new Simulation(Choice1Of4 implementation, fullscreen)
+  let RunAssignment2 implementation fullscreen = new Simulation(Choice2Of4 implementation, fullscreen)
+  let RunAssignment3 implementation fullscreen = new Simulation(Choice3Of4 implementation, fullscreen)
+  let RunAssignment4 implementation fullscreen = new Simulation(Choice4Of4 implementation, fullscreen)
 
 
   let random = System.Random()
