@@ -4,11 +4,16 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{enumitem}
+\usepackage{listings}
 \usepackage{ulem}
 \usepackage[official]{eurosym}
 \title{Algorithms (INFDEV026A) \\ Practical Assignments}
 \author { }
 \date { }
+\lstset{language=Java,
+	basicstyle=\ttfamily\footnotesize,
+	mathescape=true,
+	breaklines=true}
 \begin{document}
 \maketitle
 
@@ -19,6 +24,7 @@
 \item Not delivering the assignment in time implies taking the exam at the retake.
 \item Each exercise has its own deadline, which will be checked through Github commits.
 \item There will be a brief oral check on the content of the assignment.
+\item The only library tools you are allowed to use are: arrays, lists, and math functions. Other data structures or functions on data structures covered by the course must be self-implemented.
 \end{itemize}
 
 \section*{Introduction to the framework}
@@ -30,22 +36,53 @@ The exercises will be based on the simulation of a city, containing houses, hosp
 \textbf{Points}: 2. \\
 \textbf{Goal}: Sort all services (hospital, shops, ...) by Euclidean distance from a specified house.\\
 
-The city map is made of several infrastructures, each one with its own functionality: hospitals, police stations, houses, condos, super markets, schools. The goal of this assignment is finding the closest building of each kind to a specified house, with respect to the Euclidean distance:
+The city map is made of several infrastructures, each one with its own functionality: hospitals, police stations, residential, super markets, schools. The goal of this assignment is finding the closest building of each kind (excluding residential) to a specified house, with respect to the Euclidean distance:
 \begin{align*}
 d(house,building) = \sqrt{(x_{house} - x_{building})^{2} + (y_{house} - y_{building})^{2} } 
 \end{align*}
 \noindent
-This means we want the closest police station, super market, school, etc. from a specified house, independently on the fact that they are connected by road (everyone has his private helicopter to move around the city).
+This means we want the closest police station, super market, school, etc. from a specified residential building, independently on the fact that they are connected by road (everyone has his private helicopter to move around the city).
 
-In order to achieve this goal, we will sort the list of the buildings of the given type according to their distance. Any implementation not using this technique will not be accepted and evaluated. Write a function which returns
+Write a function that takes as input a house position (\texttt{Vector2}) and a list of building positions (\texttt{IEnumerable<Vector2>}) and returns a sorted list of building positions according to their distance from the house position (\texttt{IEnumerable<Vector2>}). Use the merge sort as sorting algorithm. Any implementation not using this technique will not be accepted and evaluated.
 
-\section*{Exercise 2A - Hash table}
+\begin{lstlisting}
+public static IEnumerable<Vector2> SortDistances(Vector2 house, IEnumerable<Vector2> buildings)
+\end{lstlisting}
 
-\section*{Exercise 2B - Tree}
+\section*{Exercise 2 - Binary search tree}
+\textbf{Deadline}: End week 6. \\
+\textbf{Points}: 4. \\
+\textbf{Goal}: \\
 
-\section*{Exercise 3 - Dijkstra}
+\begin{lstlisting}
+public static IEnumerable<Vector2> 
+\end{lstlisting}
+\section*{Exercise 3 - Shortest path(s)}
+\textbf{Deadline}: End week 9. \\
+\textbf{Points}: 3. \\
+\textbf{Goal}: Shortest path(s) from a specified residential building to other specified building(s).\\
+\textbf{Remark}: For this assignment \underline{only}, you can choose between two different implementations (Dijkstra or Floyd Warshall).\\
 
-\section*{Exercise 4 - Floyd Warshall}
+\noindent
+\textbf{Hint:} In both assignments, you have to build the adjacency matrix using the starting point and endpoint of the road sections. The weight of the edge is the distance between the two points.
+
+\subsection*{Dijkstra}
+In this assignment we want to compute the minimum path between a residential building and a service building. The minimum path is made of the road sections to use in order to drive to the service building.
+
+Write a function that takes as input a house position (\texttt{Vector2}), a service building position (\texttt{Vector2}), the list of road sections (each represented as a pair of starting point and endpoint) and returns a list of road sections forming the shortest path.
+
+\begin{lstlisting}
+public static IEnumerable<Tuple<Vector2, Vector2>> ShortestPath(Vector2 house, Vector2 building, IEnumerable<Tuple<Vector2, Vector2>> roadSections)
+\end{lstlisting}
+
+\subsection*{Floyd Warshall}
+In this assignment we want to compute the minimum paths between a residential building and a list of service buildings. The minimum paths are made of the road sections to use in order to drive to the service building.
+
+Write a function that takes as input a house position (\texttt{Vector2}), a list of service buildings positions (\texttt{IEnumerable<Vector2>}), the list of road sections (each represented as a pair of starting point and endpoint) and returns a list of lists of road sections forming the shortest paths (\texttt{IEnumerable<IEnumerable<Tuple<Vector2, Vector2>>>}).
+
+\begin{lstlisting}
+public static IEnumerable<IEnumerable<Tuple<Vector2, Vector2>>> ShortestPaths(Vector2 house, IEnumerable<Vector2> building, IEnumerable<Tuple<Vector2, Vector2>> roadSections)
+\end{lstlisting}
 
 
 \end{document}
