@@ -1,8 +1,10 @@
 \documentclass[10pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
+\usepackage{hyperref}
 \usepackage{amsfonts}
 \usepackage{amssymb}
+\usepackage{graphicx}
 \usepackage{enumitem}
 \usepackage{listings}
 \usepackage{ulem}
@@ -17,7 +19,7 @@
 \begin{document}
 \maketitle
 
-\section*{Instructions}
+\section*{General (important) information}
 \begin{itemize}[noitemsep]
 \item The assignment is individual.
 \item The assignment must be implemented using C\# or F\#.
@@ -28,54 +30,115 @@
 \end{itemize}
 
 \section*{Introduction to the framework}
-The exercises will be based on the simulation of a city, containing houses, hospitals, shops, etc. all connected by streets. The student must implement algorithms to answer some queries on the simulated city.
+The exercises will be based on the simulation of a city, containing houses and special buildings (represented through ancient civilization temples), all connected by streets. The student must implement algorithms to answer some queries on the simulated city.
+
+\subsection*{Instructions}
+\begin{itemize}
+\item Download Visual Studio 2015 Community (\url{https://www.visualstudio.com/en-us/downloads/download-visual-studio-vs.aspx}) 
+\item Check in the project creation if F\# is installed; otherwise download the F\# project template;
+\item Download Monogame for Visual Studio (\url{http://www.monogame.net/2015/04/29/monogame-3-4/}) and install it (Visual Studio must be closed during installation of MonoGame);
+\item Download the project framework from N@tschool and open the .sln file; if it is not already set, right click on \texttt{EntryPoint} project (in the solution explorer) and select ``Set as startup project";
+\item The functions you have to program are contained in the file \texttt{Program.cs}; for now there are stub versions of the function implementations that you have to replace with yours;
+\item Compile the project in debug mode and run it with Ctrl+F5;
+\item A window opens asking you which assignment you want to execute: choose a number between 1 and 4 (or q if you want to close it) and press Ok;
+\item The simulation will start. You can move the visual with WASD and zoom with Z (zoom in) and X (zoom out).
+\item Exit with ESC; 
+\end{itemize}
 
 \section*{Exercise 1 - Sorting}
 
 \textbf{Deadline}: End week 4. \\
-\textbf{Points}: 2. \\
-\textbf{Goal}: Sort all services (hospital, shops, ...) by Euclidean distance from a specified house.\\
+\textbf{Points}: 2.
 
-The city map is made of several infrastructures, each one with its own functionality: hospitals, police stations, residential, super markets, schools. The goal of this assignment is finding the closest building of each kind (excluding residential) to a specified house, with respect to the Euclidean distance:
+\subsection*{Goal}
+Sort all special buildings by Euclidean distance from a specified house. The Euclidean distance formula is:
 \begin{align*}
 d(house,building) = \sqrt{(x_{house} - x_{building})^{2} + (y_{house} - y_{building})^{2} } 
 \end{align*}
-\noindent
-This means we want the closest police station, super market, school, etc. from a specified residential building, independently on the fact that they are connected by road (everyone has his private helicopter to move around the city).
+This means that the connection through roads is not relevant in this exercise (everyone has his private helicopter to move around the city).
 
-Write a function that takes as input a house position (\texttt{Vector2}) and a list of building positions (\texttt{IEnumerable<Vector2>}) and returns a sorted list of building positions according to their distance from the house position (\texttt{IEnumerable<Vector2>}). Use the merge sort as sorting algorithm. Any implementation not using this technique will not be accepted and evaluated.
-
+\subsection*{Function signature} 
 \begin{lstlisting}
-public static IEnumerable<Vector2> SortDistances(Vector2 house, IEnumerable<Vector2> buildings)
+private static IEnumerable<Vector2> SortSpecialBuildingsByDistance(Vector2 house, IEnumerable<Vector2> specialBuildings)
 \end{lstlisting}
+
+This function takes as input a house position (\texttt{Vector2 house}) and a list of building positions (\texttt{IEnumerable<Vector2> specialBuildings}) and returns a sorted list of building positions according to their distance from the house position (\texttt{IEnumerable<Vector2>}). Use the \textbf{merge sort} as sorting algorithm. Any implementation not using this technique will not be accepted and evaluated.
+
+\subsection*{Result}
+As you can see from Figure \ref{img:Ex1}, the selected house is highlighted and there is a number above each special building indicating its position in the sorted list of buildings. 
+
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=0.3]{img/exercise1}
+\caption{Exercise 1 result}
+\label{img:Ex1}
+\end{figure}
+
 
 \section*{Exercise 2 - Binary search tree}
 \textbf{Deadline}: End week 6. \\
-\textbf{Points}: 4. \\
-\textbf{Goal}: \\
+\textbf{Points}: 4.
 
+\subsection*{Goal}
+Find all the special buildings within a specified distance from each house. Create a k-d tree to store the special buildings positions in advance (like explained in class). Then look up the tree for each of the requested houses and the distance associated to it.
+
+\subsection*{Function signature} 
 \begin{lstlisting}
-public static IEnumerable<Vector2> 
+private static IEnumerable<IEnumerable<Vector2>> findSpecialBuildingsWithinDistanceFromHouse(IEnumerable<Vector2> specialBuildings, IEnumerable<Tuple<Vector2, float>> houseAndDistances)
 \end{lstlisting}
+
+\noindent
+This function takes as input a list of special building positions, a list of pairs made of a house position and the maximum distance for a special building to be selected, and returns a list of lists of positions of selected special buildings (one list for each house).
+
+\subsection*{Result}
+As you can see from Figure \ref{img:Ex2}, each selected house is surrounded by a circle that should contain all the special buildings within distance k. The buildings you return are highlighted in blue, the houses in red.
+
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=0.25]{img/exercise2}
+\caption{Exercise 2 result}
+\label{img:Ex2}
+\end{figure}
+
 \section*{Exercise 3 - Shortest path(s)}
 \textbf{Deadline}: End week 9. \\
-\textbf{Points}: 3. \\
-\textbf{Goal}: Shortest path(s) from a specified residential building to other specified building(s).\\
+\textbf{Points}: 3.
+
+
+\subsection*{Goal}
+Find the Shortest path(s) from a specified house to other special building(s). The shortest path is made of the road sections to use in order to drive from the house to the special building.\\
 \textbf{Remark}: For this assignment \underline{only}, you can choose between two different implementations (Dijkstra or Floyd Warshall).\\
 
 \noindent
 \textbf{Hint:} In both assignments, you have to build the adjacency matrix using the starting point and endpoint of the road sections. The weight of the edge is the distance between the two points.
 
-\subsection*{Dijkstra}
-In this assignment we want to compute the minimum path between a residential building and a service building. The minimum path is made of the road sections to use in order to drive to the service building.
+\subsection*{Option 1: Dijkstra}
+In this assignment we want to compute the minimum path between one house and one special building. 
 
-Write a function that takes as input a house position (\texttt{Vector2}), a service building position (\texttt{Vector2}), the list of road sections (each represented as a pair of starting point and endpoint) and returns a list of road sections forming the shortest path.
+\subsection*{Function signature} 
+\begin{lstlisting}
+private static IEnumerable<Tuple<Vector2, Vector2>> findRoute(Vector2 startingBuilding, Vector2 destinationBuilding, IEnumerable<Tuple<Vector2, Vector2>> roads)
+\end{lstlisting}
+
+\noindent
+This function takes as input the position of the house to start from, the position of the destination, and a list of road sections (each represented as a pair of starting point and endpoint), and returns a list of road sections forming the shortest path.
+
+\subsection*{Result}
+As you can see from Figure \ref{img:Ex3-1}, each selected house is surrounded by a circle that should contain all the special buildings within distance k. The buildings you return are highlighted in blue, the houses in red.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.25]{img/exercise3}
+\caption{Exercise 3/1 result}
+\label{img:Ex3-1}
+\end{figure}
+
 
 \begin{lstlisting}
 public static IEnumerable<Tuple<Vector2, Vector2>> ShortestPath(Vector2 house, Vector2 building, IEnumerable<Tuple<Vector2, Vector2>> roadSections)
 \end{lstlisting}
 
-\subsection*{Floyd Warshall}
+\subsection*{Option 2: Floyd Warshall}
 In this assignment we want to compute the minimum paths between a residential building and a list of service buildings. The minimum paths are made of the road sections to use in order to drive to the service building.
 
 Write a function that takes as input a house position (\texttt{Vector2}), a list of service buildings positions (\texttt{IEnumerable<Vector2>}), the list of road sections (each represented as a pair of starting point and endpoint) and returns a list of lists of road sections forming the shortest paths (\texttt{IEnumerable<IEnumerable<Tuple<Vector2, Vector2>>>}).
