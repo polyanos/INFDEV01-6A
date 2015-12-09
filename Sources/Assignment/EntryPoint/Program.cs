@@ -8,9 +8,17 @@ namespace EntryPoint
 #if WINDOWS || LINUX
   public static class Program
   {
+    static void CrashMe(int n)
+    {
+      Console.Write("Going strong at level " + n + "\r                       ");
+      CrashMe(n + 1);
+    }
+
     [STAThread]
     static void Main()
     {
+      CrashMe(0);
+
       var fullscreen = false;
       read_input:
       switch (Microsoft.VisualBasic.Interaction.InputBox("Which assignment shall run next? (1, 2, 3, 4, or q for quit)", "Choose assignment", VirtualCity.GetInitialValue()))
