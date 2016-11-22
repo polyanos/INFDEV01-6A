@@ -8,16 +8,10 @@ namespace EntryPoint
 #if WINDOWS || LINUX
   public static class Program
   {
-    static void CrashMe(int n)
-    {
-      Console.Write("Going strong at level " + n + "\r                       ");
-      CrashMe(n + 1);
-    }
 
     [STAThread]
     static void Main()
     {
-      CrashMe(0);
 
       var fullscreen = false;
       read_input:
