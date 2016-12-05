@@ -21,9 +21,8 @@
                                     System.Func<seq<Vector2>, seq<Vector2 * float32>, seq<seq<Vector2>>>,
                                     System.Func<Vector2, Vector2, seq<Vector2 * Vector2>, seq<Vector2 * Vector2>>,
                                     System.Func<Vector2, seq<Vector2>, seq<Vector2 * Vector2>, seq<seq<Vector2 * Vector2>>>>,
-                  fullscreen) =
+                  fullscreen) = 
     inherit Game()
-
 
     member val graphics = 
       let g = new GraphicsDeviceManager(base.Self)
@@ -198,7 +197,7 @@
       let ks = Keyboard.GetState()
       let camera_speed = MathHelper.SmoothStep(300.0f, 10.0f, (zoom - 1.0f) / 4.0f)
       if ks.[Keys.Escape] = KeyState.Down then
-        do this.Exit()
+        do this.Exit();
       if ks.[Keys.A] = KeyState.Down then
         camera_x <- camera_x - camera_speed * gt.DT * zoom
       if ks.[Keys.D] = KeyState.Down then
