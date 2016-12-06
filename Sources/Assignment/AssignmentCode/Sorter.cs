@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AssignmentCode
 {
-    static class Sorter
+    static public class Sorter
     {
         /// <summary>
         /// Sorts the distance, ascending, of special buildings relative to the specified house.
@@ -60,11 +60,11 @@ namespace AssignmentCode
 
                 for (; index < middle; index++)
                 {
-                    left.Add(distanceList.ElementAt(index));
+                    left.Add(distanceList[index]);
                 }
                 for (; index < distanceList.Count(); index++)
                 {
-                    right.Add(distanceList.ElementAt(index));
+                    right.Add(distanceList[index]);
                 }
 
                 left = recursiveSort(left);
@@ -85,19 +85,19 @@ namespace AssignmentCode
                         break;
                     }
 
-                    if (left.ElementAt(leftIndex).Item2 < right.ElementAt(rightIndex).Item2)
+                    if (left[leftIndex].Item2 < right[rightIndex].Item2)
                     {
-                        distanceList.Add(left.ElementAt(leftIndex));
+                        distanceList.Add(left[leftIndex]);
                         leftIndex++;
                     }
-                    else if (left.ElementAt(leftIndex).Item2 > right.ElementAt(rightIndex).Item2)
+                    else if (left[leftIndex].Item2 > right[rightIndex].Item2)
                     {
-                        distanceList.Add(right.ElementAt(rightIndex));
+                        distanceList.Add(right[rightIndex]);
                         rightIndex++;
                     }
                     else
                     {
-                        distanceList.Add(left.ElementAt(leftIndex));
+                        distanceList.Add(left[leftIndex]);
                         leftIndex++;
                     }
                 }
@@ -110,7 +110,7 @@ namespace AssignmentCode
         {
             for (; sourceIndex < source.Count(); sourceIndex++)
             {
-                destination.Add(source.ElementAt(sourceIndex));
+                destination.Add(source[sourceIndex]);
             }
 
             return destination;
