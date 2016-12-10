@@ -31,6 +31,26 @@ namespace AssignmentCode
             return sortedList;
         }
 
+        static public ICollection<Vector2> sortBuildingsByDimension(IEnumerable<Vector2> specialBuildings, SortDimension dimension)
+        {
+            int index;
+            List<Tuple<Vector2, float>> sortList = new List<Tuple<Vector2, float>>(specialBuildings.Count());
+            switch (dimension)
+            {
+                case SortDimension.X:
+                    foreach(Vector2 sb in specialBuildings) { sortList.Add(new Tuple<Vector2, float>(sb, sb.X)); }
+                    break;
+                case SortDimension.Y:
+                    foreach (Vector2 sb in specialBuildings) { sortList.Add(new Tuple<Vector2, float>(sb, sb.Y)); }
+                    break;
+            }
+            recursiveSort(sortList);
+
+            List<Vector2> resultList = new List<Vector2>(sortList.Count);
+            foreach(Tuple<Vector2, float> sb in sortList) { resultList.Add(sb.Item1); }
+            return resultList;
+        }
+
         /// <summary>
         /// Calculates the Euclidean distance between the starting point and ending point. 
         /// The distance will be returned as a single precision floating point number.
@@ -67,8 +87,8 @@ namespace AssignmentCode
                     right.Add(distanceList[index]);
                 }
 
-                left = recursiveSort(left);
-                right = recursiveSort(right);
+                left = recursiveDistanceSort(left);
+                right = recursiveDistanceSort(right);
 
                 int oldCount = distanceList.Count();
                 distanceList = new List<Tuple<Vector2, float>>(oldCount);
@@ -115,5 +135,7 @@ namespace AssignmentCode
 
             return destination;
         }
+
+        public enum SortDimension { X,Y}
     }
 }
