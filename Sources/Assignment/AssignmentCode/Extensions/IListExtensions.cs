@@ -14,7 +14,7 @@ namespace AssignmentCode.Extensions
             int end = endIndex + 1;
             for(int index = startIndex; index < end; index++)
             {
-                resultList[index] = list[index];
+                resultList.Add(list[index]);
             }
 
             return resultList;

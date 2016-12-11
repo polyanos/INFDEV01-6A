@@ -19,7 +19,7 @@ namespace AssignmentCodeTests
             expectedTree.LeftNode.LeftNode = new KDNode(new Vector2(1, 1), Dimension.X);
             expectedTree.LeftNode.RightNode = new KDNode(new Vector2(2, 5), Dimension.X);
             expectedTree.RightNode = new KDNode(new Vector2(6,9), Dimension.Y);
-            expectedTree.RightNode.LeftNode = new KDNode(new Vector2(6, 9), Dimension.Y);
+            expectedTree.RightNode.LeftNode = new KDNode(new Vector2(9, 8), Dimension.Y);
 
             //Act
             KDNode resultTree = KDTreeFactory.CreateTree(specialBuildings);

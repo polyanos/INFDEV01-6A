@@ -48,10 +48,10 @@ namespace AssignmentCode
             }
             sortList = recursiveSort(sortList);
 
-            List<Vector2> resultList = new List<Vector2>(sortList.Count);
-            for(int x = 0; x < sortList.Count; x++)
+            IList<Vector2> resultList = new List<Vector2>(sortList.Count);
+            foreach(Tuple<Vector2, float> sortItem in sortList)
             {
-                resultList[x] = sortList[x].Item1;
+                resultList.Add(sortItem.Item1);
             }
             return resultList;
         }

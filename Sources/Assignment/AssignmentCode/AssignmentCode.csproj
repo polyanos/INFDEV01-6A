@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dimension.cs" />
+    <Compile Include="Extensions\IListExtensions.cs" />
     <Compile Include="KDNode.cs" />
     <Compile Include="KDTreeFactory.cs" />
     <Compile Include="Searcher.cs" />

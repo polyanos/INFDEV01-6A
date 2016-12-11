@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using AssignmentCode.Extensions;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +32,7 @@ namespace AssignmentCode
             {
                 root.LeftNode = CreateNode(childrenArrays.Item1, nextDimension(root.dimension));
             }
-            else if (childrenArrays.Item2.Count > 0)
+            if (childrenArrays.Item2.Count > 0)
             {
                 root.RightNode = CreateNode(childrenArrays.Item2, nextDimension(root.dimension));
             }
@@ -64,10 +65,9 @@ namespace AssignmentCode
 
             //Copy the values before of the median
             IList<Vector2> leftList;
-            if (middle < 1)
+            if (middle > 0)
             {
-                leftList = new List<Vector2>(middle);
-                ;
+                leftList = sortedPointList.getRange(0, middle-1);
             }
             else
             {
@@ -75,18 +75,17 @@ namespace AssignmentCode
             }
 
             //Copy the values after the median
-            Vector2[] right;
-            if (last - middle < 1)
+            IList<Vector2> rightList;
+            if ((last - middle) > 1)
             {
-                right = new Vector2[last - middle];
-                Array.Copy(sortedPointList, middle + 1, right, 0, last - middle);
+                rightList = sortedPointList.getRange(middle + 1, last -1);
             }
             else
             {
-                right = new Vector2[0];
+                rightList = new List<Vector2>(0);
             }
 
-            return new Tuple<Vector2[], Vector2[]>(left, right);
+            return new Tuple<IList<Vector2>, IList<Vector2>>(leftList, rightList);
         }
     }
 }
