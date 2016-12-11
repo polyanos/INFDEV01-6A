@@ -47,7 +47,10 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dimension.cs" />
     <Compile Include="KDNode.cs" />
+    <Compile Include="KDTreeFactory.cs" />
+    <Compile Include="Searcher.cs" />
     <Compile Include="Sorter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

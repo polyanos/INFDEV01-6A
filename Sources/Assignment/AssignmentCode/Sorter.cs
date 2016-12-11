@@ -15,39 +15,44 @@ namespace AssignmentCode
         /// <param name="house">The house which acts as the starting point.</param>
         /// <param name="specialBuildings">The special buildings which need to be sorted on distance.</param>
         /// <returns>A ordered list of special building vectors in ascending order.</returns>
-        static public IEnumerable<Vector2> sortBuildings(Vector2 house, IEnumerable<Vector2> specialBuildings)
+        static public IList<Vector2> sortBuildings(Vector2 house, IEnumerable<Vector2> specialBuildings)
         {
-            List<Vector2> sortedList = new List<Vector2>(specialBuildings.Count()); 
-            List<Tuple<Vector2, float>> distanceList = new List<Tuple<Vector2, float>>(specialBuildings.Count());
+            IList<Vector2> sortedList = new List<Vector2>(specialBuildings.Count()); 
+            IList<Tuple<Vector2, float>> sortList = new List<Tuple<Vector2, float>>(specialBuildings.Count());
 
             foreach (Vector2 sb in specialBuildings)
             {
-                distanceList.Add(new Tuple<Vector2, float>(sb, calculateDistance(house, sb)));
+                sortList.Add(new Tuple<Vector2, float>(sb, calculateDistance(house, sb)));
             }
 
-            var result = recursiveSort(distanceList);
-            result.ForEach(x => sortedList.Add(x.Item1));
+            sortList = recursiveSort(sortList);
+            foreach(Tuple<Vector2, float> sortItem in sortList)
+            {
+                sortedList.Add(sortItem.Item1);
+            }
 
             return sortedList;
         }
 
-        static public ICollection<Vector2> sortBuildingsByDimension(IEnumerable<Vector2> specialBuildings, SortDimension dimension)
+        static public IList<Vector2> sortBuildingsByDimension(IEnumerable<Vector2> specialBuildings,  Dimension dimension)
         {
-            int index;
-            List<Tuple<Vector2, float>> sortList = new List<Tuple<Vector2, float>>(specialBuildings.Count());
+            IList<Tuple<Vector2, float>> sortList = new List<Tuple<Vector2, float>>(specialBuildings.Count());
             switch (dimension)
             {
-                case SortDimension.X:
+                case Dimension.X:
                     foreach(Vector2 sb in specialBuildings) { sortList.Add(new Tuple<Vector2, float>(sb, sb.X)); }
                     break;
-                case SortDimension.Y:
+                case Dimension.Y:
                     foreach (Vector2 sb in specialBuildings) { sortList.Add(new Tuple<Vector2, float>(sb, sb.Y)); }
                     break;
             }
-            recursiveSort(sortList);
+            sortList = recursiveSort(sortList);
 
             List<Vector2> resultList = new List<Vector2>(sortList.Count);
-            foreach(Tuple<Vector2, float> sb in sortList) { resultList.Add(sb.Item1); }
+            for(int x = 0; x < sortList.Count; x++)
+            {
+                resultList[x] = sortList[x].Item1;
+            }
             return resultList;
         }
 
@@ -68,15 +73,15 @@ namespace AssignmentCode
         /// </summary>
         /// <param name="distanceList"></param>
         /// <returns></returns>
-        static private List<Tuple<Vector2, float>> recursiveSort(List<Tuple<Vector2, float>> distanceList)
+        static private IList<Tuple<Vector2, float>> recursiveSort(IList<Tuple<Vector2, float>> distanceList)
         {
             if (distanceList.Count() > 1)
             {
                 int middle = distanceList.Count() / 2;
                 int index = 0, leftIndex = 0, rightIndex = 0;
 
-                List<Tuple<Vector2, float>> left = new List<Tuple<Vector2, float>>(middle);
-                List<Tuple<Vector2, float>> right = new List<Tuple<Vector2, float>>(distanceList.Count() - middle);
+                IList<Tuple<Vector2, float>> left = new List<Tuple<Vector2, float>>(middle);
+                IList<Tuple<Vector2, float>> right = new List<Tuple<Vector2, float>>(distanceList.Count() - middle);
 
                 for (; index < middle; index++)
                 {
@@ -87,8 +92,8 @@ namespace AssignmentCode
                     right.Add(distanceList[index]);
                 }
 
-                left = recursiveDistanceSort(left);
-                right = recursiveDistanceSort(right);
+                left = recursiveSort(left);
+                right = recursiveSort(right);
 
                 int oldCount = distanceList.Count();
                 distanceList = new List<Tuple<Vector2, float>>(oldCount);
@@ -126,7 +131,7 @@ namespace AssignmentCode
             return distanceList;
         }
 
-        static private List<Tuple<Vector2, float>> copyRemainingItems(List<Tuple<Vector2, float>> destination, List<Tuple<Vector2, float>> source, int sourceIndex)
+        static private IList<Tuple<Vector2, float>> copyRemainingItems(IList<Tuple<Vector2, float>> destination, IList<Tuple<Vector2, float>> source, int sourceIndex)
         {
             for (; sourceIndex < source.Count(); sourceIndex++)
             {

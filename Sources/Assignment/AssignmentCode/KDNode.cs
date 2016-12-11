@@ -7,32 +7,17 @@ using System.Threading.Tasks;
 
 namespace AssignmentCode
 {
-    class KDNode
+    public class KDNode
     {
-        Vector2 point;
-        KDNode leftNode;
-        KDNode rightNode;
+        public Dimension dimension { get; }
+        public Vector2 point { get; }
+        public KDNode LeftNode { set; get; }
+        public KDNode RightNode { set; get; }
 
-        public KDNode(Vector2 point)
+        public KDNode(Vector2 point, Dimension dimension)
         {
             this.point = point;
+            this.dimension = dimension;
         }
-
-        private void setLeftChild(KDNode child)
-        {
-
-        }
-
-        private void setRightChild(KDNode child)
-        {
-
-        }
-
-        public KDNode CreateTree(ICollection<Vector2> points)
-        {
-            return ;
-        }
-
-        public enum Dimension { X,Y}
     }
 }
