@@ -14,27 +14,27 @@ namespace AssignmentCode
         {
             IList<Vector2> vectorList = new List<Vector2>(points);
 
-            KDNode treeRoot = CreateNode(vectorList, Dimension.X);
+            KDNode treeRoot = CreateNode(null, vectorList, Dimension.X);
             return treeRoot;
         }
 
-        private static KDNode CreateNode(IList<Vector2> points, Dimension dimension)
+        private static KDNode CreateNode(KDNode parent, IList<Vector2> points, Dimension dimension)
         {
             //Sort the buildings int the current dimension
             points = Sorter.sortBuildingsByDimension(points, dimension);
             //Create the root node.
-            KDNode root = new KDNode(getMedianPoint(points), dimension);
+            KDNode root = new KDNode(parent, getMedianPoint(points), dimension);
             //Divide the remaining points
             var childrenArrays = getLeftRightChildren(points);
 
             //Create the left and right nodes
             if (childrenArrays.Item1.Count > 0)
             {
-                root.LeftNode = CreateNode(childrenArrays.Item1, nextDimension(root.dimension));
+                root.LeftNode = CreateNode(root, childrenArrays.Item1, nextDimension(root.Dimension));
             }
             if (childrenArrays.Item2.Count > 0)
             {
-                root.RightNode = CreateNode(childrenArrays.Item2, nextDimension(root.dimension));
+                root.RightNode = CreateNode(root, childrenArrays.Item2, nextDimension(root.Dimension));
             }
 
             return root;

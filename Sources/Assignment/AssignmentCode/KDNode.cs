@@ -9,15 +9,17 @@ namespace AssignmentCode
 {
     public class KDNode
     {
-        public Dimension dimension { get; }
-        public Vector2 point { get; }
-        public KDNode LeftNode { set; get; }
-        public KDNode RightNode { set; get; }
+        public Dimension Dimension { get; }
+        public Vector2 Point { get; }
+        public KDNode Parent { get; set; }
+        public KDNode LeftNode { get; set; }
+        public KDNode RightNode { get; set; }
 
-        public KDNode(Vector2 point, Dimension dimension)
+        public KDNode(KDNode parent, Vector2 point, Dimension dimension)
         {
-            this.point = point;
-            this.dimension = dimension;
+            Point = point;
+            Dimension = dimension;
+            Parent = parent;
         }
     }
 }
