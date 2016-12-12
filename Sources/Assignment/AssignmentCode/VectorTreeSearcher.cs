@@ -7,16 +7,20 @@ using System.Threading.Tasks;
 
 namespace AssignmentCode
 {
-    class Searcher
+    class VectorTreeSearcher
     {
-        public IEnumerable<IEnumerable<Vector2>> searchBuildingsWithinDistance(IEnumerable<Vector2> specialBuildings, IEnumerable<Tuple<Vector2, float>> housesWithDistance)
+        private KDVectorNode vectorTree;
+        public VectorTreeSearcher(KDVectorNode vectorTree)
         {
-            KDNode specialBuildingTree = KDTreeFactory.CreateTree(specialBuildings);
+            this.vectorTree = vectorTree;
+        }
 
+        public IEnumerable<IEnumerable<Vector2>> searchBuildingsWithinDistance(IEnumerable<Tuple<Vector2, float>> housesWithDistance)
+        {
 
         }
 
-        private IEnumerable<Vector2> searchBuildings(KDNode buildingTree, Vector2 building, float distanceFromBuilding)
+        private IEnumerable<Vector2> searchBuildings(Vector2 building, float distanceFromBuilding)
         {
             float beginX = building.X - distanceFromBuilding;
             float endX = building.X + distanceFromBuilding;

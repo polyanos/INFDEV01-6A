@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace AssignmentCode
 {
-    public class KDNode
+    public class KDVectorNode
     {
         public Dimension Dimension { get; }
         public Vector2 Point { get; }
-        public KDNode Parent { get; set; }
-        public KDNode LeftNode { get; set; }
-        public KDNode RightNode { get; set; }
+        public KDVectorNode Parent { get; set; }
+        public KDVectorNode LeftNode { get; set; }
+        public KDVectorNode RightNode { get; set; }
 
-        public KDNode(KDNode parent, Vector2 point, Dimension dimension)
+        public KDVectorNode(KDVectorNode parent, Vector2 point, Dimension dimension)
         {
             Point = point;
             Dimension = dimension;

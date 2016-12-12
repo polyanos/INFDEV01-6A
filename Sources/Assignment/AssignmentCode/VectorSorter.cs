@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AssignmentCode
 {
-    static public class Sorter
+    static public class VectorSorter
     {
         /// <summary>
         /// Sorts the distance, ascending, of special buildings relative to the specified house.

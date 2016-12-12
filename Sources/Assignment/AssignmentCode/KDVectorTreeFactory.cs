@@ -8,22 +8,22 @@ using System.Threading.Tasks;
 
 namespace AssignmentCode
 {
-    public static class KDTreeFactory
+    public class KDVectorTreeFactory
     {
-        public static KDNode CreateTree(IEnumerable<Vector2> points)
+        public KDVectorNode CreateTree(IEnumerable<Vector2> points)
         {
             IList<Vector2> vectorList = new List<Vector2>(points);
 
-            KDNode treeRoot = CreateNode(null, vectorList, Dimension.X);
+            KDVectorNode treeRoot = CreateNode(null, vectorList, Dimension.X);
             return treeRoot;
         }
 
-        private static KDNode CreateNode(KDNode parent, IList<Vector2> points, Dimension dimension)
+        private KDVectorNode CreateNode(KDVectorNode parent, IList<Vector2> points, Dimension dimension)
         {
             //Sort the buildings int the current dimension
-            points = Sorter.sortBuildingsByDimension(points, dimension);
+            points = VectorSorter.sortBuildingsByDimension(points, dimension);
             //Create the root node.
-            KDNode root = new KDNode(parent, getMedianPoint(points), dimension);
+            KDVectorNode root = new KDVectorNode(parent, getMedianPoint(points), dimension);
             //Divide the remaining points
             var childrenArrays = getLeftRightChildren(points);
 
@@ -40,7 +40,7 @@ namespace AssignmentCode
             return root;
         }
 
-        private static Dimension nextDimension(Dimension dimension)
+        private Dimension nextDimension(Dimension dimension)
         {
             switch (dimension)
             {
@@ -53,12 +53,12 @@ namespace AssignmentCode
             }
         }
 
-        private static Vector2 getMedianPoint(IList<Vector2> sortedPointList)
+        private Vector2 getMedianPoint(IList<Vector2> sortedPointList)
         {
             return sortedPointList[sortedPointList.Count / 2];
         }
 
-        private static Tuple<IList<Vector2>, IList<Vector2>> getLeftRightChildren(IList<Vector2> sortedPointList)
+        private Tuple<IList<Vector2>, IList<Vector2>> getLeftRightChildren(IList<Vector2> sortedPointList)
         {
             int middle = sortedPointList.Count / 2;
             int last = sortedPointList.Count;

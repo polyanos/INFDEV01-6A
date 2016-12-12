@@ -42,7 +42,7 @@ namespace EntryPoint
 
         private static IEnumerable<Vector2> SortSpecialBuildingsByDistance(Vector2 house, IEnumerable<Vector2> specialBuildings)
         {
-            return Sorter.sortBuildings(house, specialBuildings);
+            return VectorSorter.sortBuildings(house, specialBuildings);
         }
 
         private static IEnumerable<IEnumerable<Vector2>> FindSpecialBuildingsWithinDistanceFromHouse(
