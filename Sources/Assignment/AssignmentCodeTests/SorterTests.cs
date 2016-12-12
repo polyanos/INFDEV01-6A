@@ -23,7 +23,7 @@ namespace AssignmentCodeTests
             List<Vector2> expectedResultList = new List<Vector2>() { new Vector2(1, 5), new Vector2(3, 6), new Vector2(2, 3), new Vector2(6, 6), new Vector2(1, 1), new Vector2(9, 8) };
 
             //Act
-            var resultList = Sorter.sortBuildings(house, buildings);
+            var resultList = VectorSorter.sortBuildings(house, buildings);
 
             //Assert
             Assert.IsTrue(resultList.Count() == expectedResultList.Count);
@@ -45,7 +45,7 @@ namespace AssignmentCodeTests
             Vector2[] expectedResult = new Vector2[] { new Vector2(1, 1), new Vector2(1,5), new Vector2(2, 3), new Vector2(3,6), new Vector2(6,6), new Vector2(9, 8) };
 
             //Act
-            var result = Sorter.sortBuildingsByDimension(specialBuildings, dimension);
+            var result = VectorSorter.sortBuildingsByDimension(specialBuildings, dimension);
 
             //Assert
             Assert.IsTrue(result.Count == expectedResult.Length);
@@ -66,7 +66,7 @@ namespace AssignmentCodeTests
             Vector2[] expectedResult = new Vector2[] { new Vector2(1,1), new Vector2(2,3), new Vector2(1,5), new Vector2(3, 6), new Vector2(6, 6), new Vector2(9, 8) };
 
             //Act
-            var result = Sorter.sortBuildingsByDimension(specialBuildings, dimension);
+            var result = VectorSorter.sortBuildingsByDimension(specialBuildings, dimension);
 
             //Assert
             Assert.IsTrue(result.Count == expectedResult.Length);

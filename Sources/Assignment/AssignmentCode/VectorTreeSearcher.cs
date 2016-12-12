@@ -17,7 +17,7 @@ namespace AssignmentCode
 
         public IEnumerable<IEnumerable<Vector2>> searchBuildingsWithinDistance(IEnumerable<Tuple<Vector2, float>> housesWithDistance)
         {
-
+            throw new NotImplementedException();
         }
 
         private IEnumerable<Vector2> searchBuildings(Vector2 building, float distanceFromBuilding)
@@ -26,6 +26,8 @@ namespace AssignmentCode
             float endX = building.X + distanceFromBuilding;
             float beginY = building.Y - distanceFromBuilding;
             float endY = building.Y + distanceFromBuilding;
+
+            throw new NotImplementedException();
         }
     }
 }
