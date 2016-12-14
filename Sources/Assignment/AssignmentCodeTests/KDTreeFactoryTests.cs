@@ -15,30 +15,30 @@ namespace AssignmentCodeTests
             //Arange
             KDVectorTreeFactory factory = new KDVectorTreeFactory();
             IEnumerable<Vector2> specialBuildings = new List<Vector2>() { new Vector2(5, 6), new Vector2(6, 9), new Vector2(3, 3), new Vector2(9, 8), new Vector2(1, 1), new Vector2(2, 5) };
-            KDVectorNode expectedTree = new KDVectorNode(null, new Vector2(5, 6), Dimension.X);
-            expectedTree.LeftNode = new KDVectorNode(expectedTree, new Vector2(3, 3), Dimension.Y);
-            expectedTree.LeftNode.LeftNode = new KDVectorNode(expectedTree.LeftNode, new Vector2(1, 1), Dimension.X);
-            expectedTree.LeftNode.RightNode = new KDVectorNode(expectedTree.LeftNode, new Vector2(2, 5), Dimension.X);
-            expectedTree.RightNode = new KDVectorNode(expectedTree, new Vector2(6, 9), Dimension.Y);
-            expectedTree.RightNode.LeftNode = new KDVectorNode(expectedTree.RightNode, new Vector2(9, 8), Dimension.Y);
+            KDNode<Vector2> expectedTree = new KDVectorNode(null, Dimension.X, new Vector2(5, 6));
+            expectedTree.LeftChild = new KDVectorNode(expectedTree, Dimension.Y, new Vector2(3, 3));
+            expectedTree.LeftChild.LeftChild = new KDVectorNode(expectedTree.LeftChild, Dimension.X, new Vector2(1, 1));
+            expectedTree.LeftChild.RightChild = new KDVectorNode(expectedTree.LeftChild, Dimension.X, new Vector2(2, 5));
+            expectedTree.RightChild = new KDVectorNode(expectedTree, Dimension.Y, new Vector2(6, 9));
+            expectedTree.RightChild.LeftChild = new KDVectorNode(expectedTree.RightChild, Dimension.Y, new Vector2(9, 8));
 
             //Act
-            KDVectorNode resultTree = factory.CreateTree(specialBuildings);
+            KDNode<Vector2> resultTree = factory.CreateTree(specialBuildings);
 
             //Assert
             checkNode(expectedTree, resultTree);
         }
 
-        private void checkNode(KDVectorNode expected, KDVectorNode result)
+        private void checkNode(KDNode<Vector2> expected, KDNode<Vector2> result)
         {
-            Assert.IsTrue(expected.Point.X == result.Point.X && expected.Point.Y == result.Point.Y);
-            if(expected.LeftNode != null)
+            Assert.IsTrue(expected.Value.X == result.Value.X && expected.Value.Y == result.Value.Y);
+            if(expected.LeftChild != null)
             {
-                checkNode(expected.LeftNode, result.LeftNode);
+                checkNode(expected.LeftChild, result.LeftChild);
             }
-            if(expected.RightNode != null)
+            if(expected.RightChild != null)
             {
-                checkNode(expected.RightNode, result.RightNode);
+                checkNode(expected.RightChild, result.RightChild);
             }
         }
     }

@@ -49,6 +49,8 @@
   <ItemGroup>
     <Compile Include="Dimension.cs" />
     <Compile Include="Extensions\IListExtensions.cs" />
+    <Compile Include="Extensions\IVectorExtensions.cs" />
+    <Compile Include="KDNode.cs" />
     <Compile Include="KDVectorNode.cs" />
     <Compile Include="KDVectorTreeFactory.cs" />
     <Compile Include="VectorTreeSearcher.cs" />

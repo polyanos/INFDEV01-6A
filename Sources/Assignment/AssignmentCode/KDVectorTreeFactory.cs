@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,31 +11,33 @@ namespace AssignmentCode
 {
     public class KDVectorTreeFactory
     {
-        public KDVectorNode CreateTree(IEnumerable<Vector2> points)
+        public KDNode<Vector2> CreateTree(IEnumerable<Vector2> points)
         {
+            Debug.WriteLine("Creating a KD tree for " + points.Count() + " values.");
+
             IList<Vector2> vectorList = new List<Vector2>(points);
 
-            KDVectorNode treeRoot = CreateNode(null, vectorList, Dimension.X);
+            KDNode<Vector2> treeRoot = CreateNode(null, vectorList, Dimension.X);
             return treeRoot;
         }
 
-        private KDVectorNode CreateNode(KDVectorNode parent, IList<Vector2> points, Dimension dimension)
+        private KDNode<Vector2> CreateNode(KDNode<Vector2> parent, IList<Vector2> points, Dimension dimension)
         {
             //Sort the buildings int the current dimension
             points = VectorSorter.sortBuildingsByDimension(points, dimension);
             //Create the root node.
-            KDVectorNode root = new KDVectorNode(parent, getMedianPoint(points), dimension);
+            KDNode<Vector2> root = new KDVectorNode(parent, dimension, getMedianPoint(points));
             //Divide the remaining points
             var childrenArrays = getLeftRightChildren(points);
 
             //Create the left and right nodes
             if (childrenArrays.Item1.Count > 0)
             {
-                root.LeftNode = CreateNode(root, childrenArrays.Item1, nextDimension(root.Dimension));
+                root.LeftChild = CreateNode(root, childrenArrays.Item1, nextDimension(root.Dimension));
             }
             if (childrenArrays.Item2.Count > 0)
             {
-                root.RightNode = CreateNode(root, childrenArrays.Item2, nextDimension(root.Dimension));
+                root.RightChild = CreateNode(root, childrenArrays.Item2, nextDimension(root.Dimension));
             }
 
             return root;

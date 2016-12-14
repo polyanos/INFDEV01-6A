@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using AssignmentCode.Extensions;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace AssignmentCode
 
             foreach (Vector2 sb in specialBuildings)
             {
-                sortList.Add(new Tuple<Vector2, float>(sb, calculateDistance(house, sb)));
+                sortList.Add(new Tuple<Vector2, float>(sb, sb.EuclideanDistance(house)));
             }
 
             sortList = recursiveSort(sortList);
@@ -54,18 +55,6 @@ namespace AssignmentCode
                 resultList.Add(sortItem.Item1);
             }
             return resultList;
-        }
-
-        /// <summary>
-        /// Calculates the Euclidean distance between the starting point and ending point. 
-        /// The distance will be returned as a single precision floating point number.
-        /// </summary>
-        /// <param name="sp">The starting point.</param>
-        /// <param name="ep">The ending point.</param>
-        /// <returns>The distance between the two points.</returns>
-        static private float calculateDistance(Vector2 sp, Vector2 ep)
-        {
-            return (float)Math.Sqrt(Math.Pow(sp.X - ep.X, 2) + Math.Pow(sp.Y - ep.Y, 2));
         }
 
         /// <summary>

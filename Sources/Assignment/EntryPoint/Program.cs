@@ -49,12 +49,8 @@ namespace EntryPoint
           IEnumerable<Vector2> specialBuildings,
           IEnumerable<Tuple<Vector2, float>> housesAndDistances)
         {
-            return
-                from h in housesAndDistances
-                select
-                  from s in specialBuildings
-                  where Vector2.Distance(h.Item1, s) <= h.Item2
-                  select s;
+            KDNode<Vector2> buildingTree = new KDVectorTreeFactory().CreateTree(specialBuildings);
+            return new VectorTreeSearcher(buildingTree).SearchBuildingsWithinDistance(housesAndDistances);
         }
 
         private static IEnumerable<Tuple<Vector2, Vector2>> FindRoute(Vector2 startingBuilding,

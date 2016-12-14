@@ -7,19 +7,29 @@ using System.Threading.Tasks;
 
 namespace AssignmentCode
 {
-    public class KDVectorNode
+    public class KDVectorNode : KDNode<Vector2>
     {
         public Dimension Dimension { get; }
-        public Vector2 Point { get; }
-        public KDVectorNode Parent { get; set; }
-        public KDVectorNode LeftNode { get; set; }
-        public KDVectorNode RightNode { get; set; }
+        public KDNode<Vector2> LeftChild { get; set; }
+        public KDNode<Vector2> Parent { get; }
+        public KDNode<Vector2> RightChild { get; set; }
+        public Vector2 Value { get; }
 
-        public KDVectorNode(KDVectorNode parent, Vector2 point, Dimension dimension)
+        public KDVectorNode(KDNode<Vector2> parent, Dimension dimension, Vector2 value)
         {
-            Point = point;
-            Dimension = dimension;
             Parent = parent;
+            Dimension = dimension;
+            Value = value;
+        }
+
+        public bool HasLeftChild()
+        {
+            return LeftChild != null;
+        }
+
+        public bool HasRightChild()
+        {
+            return RightChild != null;
         }
     }
 }

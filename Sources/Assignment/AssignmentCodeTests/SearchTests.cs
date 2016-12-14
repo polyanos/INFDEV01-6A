@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using AssignmentCode;
+using System.Linq;
 
 namespace AssignmentCodeTests
 {
@@ -10,19 +11,34 @@ namespace AssignmentCodeTests
     public class SearchTests
     {
         [TestMethod]
-        public void searhcRange()
+        public void searchRange()
         {
-            KDVectorNode testTree = new KDVectorNode(null, new Vector2(5, 6), Dimension.X);
-            testTree.LeftNode = new KDVectorNode(testTree, new Vector2(3, 3), Dimension.Y);
-            testTree.LeftNode.LeftNode = new KDVectorNode(testTree.LeftNode, new Vector2(1, 1), Dimension.X);
-            testTree.LeftNode.RightNode = new KDVectorNode(testTree.LeftNode, new Vector2(2, 5), Dimension.X);
-            testTree.RightNode = new KDVectorNode(testTree, new Vector2(6, 9), Dimension.Y);
-            testTree.RightNode.LeftNode = new KDVectorNode(testTree.RightNode, new Vector2(9, 8), Dimension.Y);
+            //Arrange
+            KDNode<Vector2> testTree = new KDVectorNode(null, Dimension.X, new Vector2(5, 6));
+            testTree.LeftChild = new KDVectorNode(testTree, Dimension.Y, new Vector2(3, 3));
+            testTree.LeftChild.LeftChild = new KDVectorNode(testTree.LeftChild, Dimension.X, new Vector2(1, 1));
+            testTree.LeftChild.RightChild = new KDVectorNode(testTree.LeftChild, Dimension.X, new Vector2(2, 5));
+            testTree.RightChild = new KDVectorNode(testTree, Dimension.Y, new Vector2(6, 9));
+            testTree.RightChild.LeftChild = new KDVectorNode(testTree.RightChild, Dimension.Y, new Vector2(9, 8));
 
-            float beginX = 2;
-            float endX = 6;
-            float beginY = 5;
-            float endY = 9;
+            Vector2 testHouse = new Vector2(3, 3);
+            float range = 2;
+            List<Vector2> expectedResults = new List<Vector2> { new Vector2(3, 3), new Vector2(1, 1), new Vector2(2,5) };
+
+            //Act
+            VectorTreeSearcher vts = new VectorTreeSearcher(testTree);
+            var returnedValue = vts.SearchBuildingsWithinDistance(new List<Tuple<Vector2, float>> { new Tuple<Vector2, float>(testHouse, range) });
+            var enumm = returnedValue.GetEnumerator();
+            enumm.MoveNext();
+            var result = enumm.Current;
+
+            //Assert
+            Assert.AreEqual(expectedResults.Count, result.Count());
+
+            foreach(Vector2 resultVector in result)
+            {
+                Assert.IsTrue(expectedResults.Exists(v=>v.X == resultVector.X && v.Y == resultVector.Y));
+            }
         }
     }
 }
