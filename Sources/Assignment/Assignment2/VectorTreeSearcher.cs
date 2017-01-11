@@ -2,12 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using AssignmentCode.Extensions;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Helper.Extensions;
+using Assignment1;
 
-namespace AssignmentCode
+namespace Assignment2
 {
     public class VectorTreeSearcher
     {

@@ -84,9 +84,21 @@
     <MonoGameContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AssignmentCode\AssignmentCode.csproj">
-      <Project>{09b05e7d-a2ab-4895-af3a-677180551994}</Project>
-      <Name>AssignmentCode</Name>
+    <ProjectReference Include="..\Assignment1\Assignment1.csproj">
+      <Project>{d93ca757-4a97-4b09-ba68-3b7f4b6d822b}</Project>
+      <Name>Assignment1</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Assignment2\Assignment2.csproj">
+      <Project>{4758e491-e889-4520-9595-1066a03ee2fc}</Project>
+      <Name>Assignment2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Assignment3\Assignment3.csproj">
+      <Project>{281a6e80-84fd-40bd-a4db-f6af12f5ca83}</Project>
+      <Name>Assignment3</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Helper\Helper.csproj">
+      <Project>{b20dbf30-fcbd-4774-881c-ddd6d467a9cc}</Project>
+      <Name>Helper</Name>
     </ProjectReference>
     <ProjectReference Include="..\Main\Game.fsproj">
       <Project>{74d933db-a600-4636-aef5-5fb5b37832a5}</Project>

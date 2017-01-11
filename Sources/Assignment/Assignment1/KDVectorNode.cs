@@ -1,11 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace AssignmentCode
+namespace Assignment1
 {
     public class KDVectorNode : KDNode<Vector2>
     {
@@ -31,5 +26,10 @@ namespace AssignmentCode
         {
             return RightChild != null;
         }
+    }
+
+    public enum Dimension
+    {
+        X, Y
     }
 }

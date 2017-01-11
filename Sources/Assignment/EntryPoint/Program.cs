@@ -1,4 +1,5 @@
-﻿using AssignmentCode;
+﻿using Assignment1;
+using Assignment2;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -59,7 +60,7 @@ namespace EntryPoint
             var startingRoad = roads.Where(x => x.Item1.Equals(startingBuilding)).First();
             List<Tuple<Vector2, Vector2>> fakeBestPath = new List<Tuple<Vector2, Vector2>>() { startingRoad };
             var prevRoad = startingRoad;
-            for (int i = 0; i < 30; i++)
+            for (int i = 0; i < 700; i++)
             {
                 prevRoad = (roads.Where(x => x.Item1.Equals(prevRoad.Item2)).OrderBy(x => Vector2.Distance(x.Item2, destinationBuilding)).First());
                 fakeBestPath.Add(prevRoad);

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AssignmentCode.Extensions
+namespace Helper.Extensions
 {
     public static class IListExtensions
     {

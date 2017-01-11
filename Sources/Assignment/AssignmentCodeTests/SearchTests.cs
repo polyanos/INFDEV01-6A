@@ -2,7 +2,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using AssignmentCode;
+using Assignment2;
+using Assignment1;
 using System.Linq;
 
 namespace AssignmentCodeTests

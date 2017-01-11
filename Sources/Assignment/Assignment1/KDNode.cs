@@ -1,4 +1,4 @@
-﻿namespace AssignmentCode
+﻿namespace Assignment1
 {
     public interface KDNode<T>
     {
