@@ -13,5 +13,17 @@ namespace Helper.Extensions
         {
             return (float)Math.Sqrt(Math.Pow(start.X - end.X, 2) + Math.Pow(start.Y - end.Y, 2));
         }
+
+        static public int GetBetterHashcode(this Vector2 value)
+        {
+            unchecked
+            {
+                int hash = (int)2166136261;
+                // Suitable nullity checks etc, of course :)
+                hash = (hash * 16777619) ^ value.X.GetHashCode();
+                hash = (hash * 16777619) ^ value.Y.GetHashCode();
+                return hash;
+            }
+        }
     }
 }

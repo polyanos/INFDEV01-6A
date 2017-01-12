@@ -8,17 +8,17 @@ using Helper.Extensions;
 
 namespace Assignment3
 {
-    class VectorEdge : Edge<Vector2, double>
+    public class VectorEdge : Edge<Vector2, double>
     {
         private double distance;
-        public Vertex<Vector2> End { get; private set; }
-        public Vertex<Vector2> Start { get; private set; }
+        public Vector2 End { get; private set; }
+        public Vector2 Start { get; private set; }
 
-        public VectorEdge(Vertex<Vector2> startPoint, Vertex<Vector2> endPoint)
+        public VectorEdge(Vector2 startPoint, Vector2 endPoint)
         {
             Start = startPoint;
             End = endPoint;
-            distance = Start.Id.EuclideanDistance(End.Id);
+            distance = Start.EuclideanDistance(End);
         }
 
         public double GetWeight()
@@ -28,7 +28,14 @@ namespace Assignment3
 
         public override int GetHashCode()
         {
-            return new { SX = Start.Id.X, SY = Start.Id.Y, EX = End.Id.X, EY = End.Id.Y }.GetHashCode();
+            unchecked
+            {
+                int hash = (int)2166136261;
+                // Suitable nullity checks etc, of course :)
+                hash = (hash * 16777619) ^ End.GetBetterHashcode();
+                hash = (hash * 16777619) ^ Start.GetBetterHashcode();
+                return hash;
+            }
         }
 
         public override bool Equals(object obj)

@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assignment3
 {
-    interface Vertex<T>
+    class RouteFinder
     {
-        T Id { get; }
     }
 }

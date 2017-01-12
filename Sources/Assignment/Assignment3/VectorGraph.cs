@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Helper.Extensions;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,25 +8,29 @@ using System.Threading.Tasks;
 
 namespace Assignment3
 {
-    class VectorGraph : Graph<Vector2, double>
+    public class VectorGraph : Graph<Vector2, double>
     {
-        public ISet<Edge<Vector2, double>> Edges { get; private set; }
-        public ISet<Vertex<Vector2>> Vertexes { get; private set; }
+        public IDictionary<Vector2, ISet<Edge<Vector2, double>>> GraphData { get; private set; }
 
-        private VectorGraph(ISet<Edge<Vector2, double>> Edges, ISet<Vertex<Vector2>> Vertexes)
+        private VectorGraph(IDictionary<Vector2, ISet<Edge<Vector2, double>>> data)
         {
-            this.Edges = Edges;
-            this.Vertexes = Vertexes;
+            GraphData = data;
         }
 
-        public Dictionary<Vertex<Vector2>, Edge<Vector2, double>> GetAdjacencyList()
+        public static Graph<Vector2, double> CreateGraphFromStreetData(IEnumerable<Tuple<Vector2, Vector2>> roadData)
         {
-            throw new NotImplementedException();
-        }
+            IDictionary<Vector2, ISet<Edge<Vector2, double>>> graphData = new Dictionary<Vector2, ISet<Edge<Vector2, double>>>(roadData.Count());
+            foreach(Tuple<Vector2, Vector2> road in roadData)
+            {
+                if (!graphData.Keys.Contains(road.Item1))
+                {
+                    graphData.Add(road.Item1, new HashSet<Edge<Vector2, double>>());
+                }
+                graphData[road.Item1].Add(new VectorEdge(road.Item1, road.Item2));
+            }
 
-        public static Graph<Vector2, double> CreateGraphFromStreetData()
-        {
-
+            VectorGraph graph = new VectorGraph(graphData);
+            return graph;
         }
     }
 }

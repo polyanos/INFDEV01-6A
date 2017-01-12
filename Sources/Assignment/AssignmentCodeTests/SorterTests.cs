@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xna.Framework;
 using Assignment1;
+using Helper.Extensions;
 
 namespace AssignmentCodeTests
 {
@@ -74,6 +75,15 @@ namespace AssignmentCodeTests
                 //Only check the relevant dimension as the the order within the same dimensional coordinate is not guaranteed.
                 Assert.IsTrue(expectedResult[x].Y == result[x].Y);
             }
+        }
+
+        [TestMethod]
+        public void testHash()
+        {
+            //Assert
+            int hash1 = new Vector2(5, 7).GetBetterHashcode();
+            int hash2 = new Vector2(7, 5).GetBetterHashcode();
+            Assert.IsFalse(hash1 == hash2);
         }
     }
 }

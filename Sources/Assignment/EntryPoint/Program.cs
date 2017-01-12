@@ -1,5 +1,6 @@
 ﻿using Assignment1;
 using Assignment2;
+using Assignment3;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -57,15 +58,8 @@ namespace EntryPoint
         private static IEnumerable<Tuple<Vector2, Vector2>> FindRoute(Vector2 startingBuilding,
           Vector2 destinationBuilding, IEnumerable<Tuple<Vector2, Vector2>> roads)
         {
-            var startingRoad = roads.Where(x => x.Item1.Equals(startingBuilding)).First();
-            List<Tuple<Vector2, Vector2>> fakeBestPath = new List<Tuple<Vector2, Vector2>>() { startingRoad };
-            var prevRoad = startingRoad;
-            for (int i = 0; i < 700; i++)
-            {
-                prevRoad = (roads.Where(x => x.Item1.Equals(prevRoad.Item2)).OrderBy(x => Vector2.Distance(x.Item2, destinationBuilding)).First());
-                fakeBestPath.Add(prevRoad);
-            }
-            return fakeBestPath;
+            Graph<Vector2, double> graph = VectorGraph.CreateGraphFromStreetData(roads);
+            return null;
         }
 
         private static IEnumerable<IEnumerable<Tuple<Vector2, Vector2>>> FindRoutesToAll(Vector2 startingBuilding,

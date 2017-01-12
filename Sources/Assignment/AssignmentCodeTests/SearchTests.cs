@@ -23,7 +23,7 @@ namespace AssignmentCodeTests
             testTree.RightChild.LeftChild = new KDVectorNode(testTree.RightChild, Dimension.Y, new Vector2(9, 8));
 
             Vector2 testHouse = new Vector2(3, 3);
-            float range = 2;
+            float range = 3;
             List<Vector2> expectedResults = new List<Vector2> { new Vector2(3, 3), new Vector2(1, 1), new Vector2(2,5) };
 
             //Act
