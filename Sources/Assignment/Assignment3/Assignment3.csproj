@@ -44,13 +44,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Class1.cs" />
     <Compile Include="Graph.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RouteFinder.cs" />
     <Compile Include="VectorEdge.cs" />
     <Compile Include="VectorGraph.cs" />
     <Compile Include="Edge.cs" />
+    <Compile Include="VectorVertex.cs" />
+    <Compile Include="Vertex.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Assignment1\Assignment1.csproj">
+      <Project>{d93ca757-4a97-4b09-ba68-3b7f4b6d822b}</Project>
+      <Name>Assignment1</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Helper\Helper.csproj">
       <Project>{b20dbf30-fcbd-4774-881c-ddd6d467a9cc}</Project>
       <Name>Helper</Name>

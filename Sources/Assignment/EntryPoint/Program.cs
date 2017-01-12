@@ -58,8 +58,8 @@ namespace EntryPoint
         private static IEnumerable<Tuple<Vector2, Vector2>> FindRoute(Vector2 startingBuilding,
           Vector2 destinationBuilding, IEnumerable<Tuple<Vector2, Vector2>> roads)
         {
-            Graph<Vector2, double> graph = VectorGraph.CreateGraphFromStreetData(roads);
-            return null;
+            
+            return RouteFinder.FindRoute(startingBuilding, destinationBuilding, roads);
         }
 
         private static IEnumerable<IEnumerable<Tuple<Vector2, Vector2>>> FindRoutesToAll(Vector2 startingBuilding,

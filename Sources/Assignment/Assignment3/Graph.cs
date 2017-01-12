@@ -13,6 +13,7 @@ namespace Assignment3
     /// <typeparam name="Y">The datatype of the weight of a Edge</typeparam>
     public interface Graph<T, Y>
     {
-        IDictionary<T, ISet<Edge<T,Y>>> GraphData { get; }
+        IDictionary<string, T> Vertexes { get; }
+        IDictionary<T, ISet<Y>> Edges { get; }
     }
 }

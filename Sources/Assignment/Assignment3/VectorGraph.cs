@@ -8,28 +8,45 @@ using System.Threading.Tasks;
 
 namespace Assignment3
 {
-    public class VectorGraph : Graph<Vector2, double>
+    public class VectorGraph : Graph<VectorVertex, VectorEdge>
     {
-        public IDictionary<Vector2, ISet<Edge<Vector2, double>>> GraphData { get; private set; }
+        public IDictionary<VectorVertex, ISet<VectorEdge>> Edges { get; private set; }
 
-        private VectorGraph(IDictionary<Vector2, ISet<Edge<Vector2, double>>> data)
+        public IDictionary<string, VectorVertex> Vertexes { get; private set; }
+
+        public VectorGraph(IDictionary<VectorVertex, ISet<VectorEdge>> edges, IDictionary<string, VectorVertex> vertexes)
         {
-            GraphData = data;
+            Edges = edges;
+            Vertexes = vertexes;
         }
 
-        public static Graph<Vector2, double> CreateGraphFromStreetData(IEnumerable<Tuple<Vector2, Vector2>> roadData)
+        public static Graph<VectorVertex, VectorEdge> CreateGraphFromStreetData(IEnumerable<Tuple<Vector2, Vector2>> roadData)
         {
-            IDictionary<Vector2, ISet<Edge<Vector2, double>>> graphData = new Dictionary<Vector2, ISet<Edge<Vector2, double>>>(roadData.Count());
-            foreach(Tuple<Vector2, Vector2> road in roadData)
+            var edges = new Dictionary<VectorVertex, ISet<VectorEdge>>();
+            var vertexes = new Dictionary<string, VectorVertex>();
+            string name;
+
+            foreach(var road in roadData)
             {
-                if (!graphData.Keys.Contains(road.Item1))
+                name = road.Item1.GetVectorName();
+                if (!vertexes.Keys.Contains(name))
                 {
-                    graphData.Add(road.Item1, new HashSet<Edge<Vector2, double>>());
+                    vertexes.Add(name, new VectorVertex(road.Item1));
                 }
-                graphData[road.Item1].Add(new VectorEdge(road.Item1, road.Item2));
             }
 
-            VectorGraph graph = new VectorGraph(graphData);
+            foreach(var road in roadData)
+            {
+                var source = vertexes[road.Item1.GetVectorName()];
+                var edge = new VectorEdge(source, vertexes[road.Item2.GetVectorName()]);
+
+                if (!edges.Keys.Contains(source)) {
+                    edges.Add(source, new HashSet<VectorEdge>());
+                }
+                edges[source].Add(edge);
+            }
+
+            VectorGraph graph = new VectorGraph(edges, vertexes);
             return graph;
         }
     }

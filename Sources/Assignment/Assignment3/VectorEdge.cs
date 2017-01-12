@@ -8,17 +8,17 @@ using Helper.Extensions;
 
 namespace Assignment3
 {
-    public class VectorEdge : Edge<Vector2, double>
+    public class VectorEdge : Edge<Vertex<Vector2, double>, double>
     {
         private double distance;
-        public Vector2 End { get; private set; }
-        public Vector2 Start { get; private set; }
+        public Vertex<Vector2, double> End { get; private set; }
+        public Vertex<Vector2, double> Start { get; private set; }
 
-        public VectorEdge(Vector2 startPoint, Vector2 endPoint)
+        public VectorEdge(Vertex<Vector2, double> startPoint, Vertex<Vector2, double> endPoint)
         {
             Start = startPoint;
             End = endPoint;
-            distance = Start.EuclideanDistance(End);
+            distance = Start.Value.EuclideanDistance(End.Value);
         }
 
         public double GetWeight()
@@ -32,8 +32,8 @@ namespace Assignment3
             {
                 int hash = (int)2166136261;
                 // Suitable nullity checks etc, of course :)
-                hash = (hash * 16777619) ^ End.GetBetterHashcode();
-                hash = (hash * 16777619) ^ Start.GetBetterHashcode();
+                hash = (hash * 16777619) ^ End.Value.GetBetterHashcode();
+                hash = (hash * 16777619) ^ Start.Value.GetBetterHashcode();
                 return hash;
             }
         }
@@ -41,7 +41,9 @@ namespace Assignment3
         public override bool Equals(object obj)
         {
             VectorEdge e = obj as VectorEdge;
-            return e != null && e.GetHashCode() == this.GetHashCode();
+            return e != null 
+                && e.GetHashCode() == this.GetHashCode()
+                &&((e.Start.Value.X == this.Start.Value.X && e.Start.Value.Y == this.Start.Value.Y) && (e.End.Value.X == this.End.Value.X && e.End.Value.Y == this.End.Value.Y));
         }
     }
 }

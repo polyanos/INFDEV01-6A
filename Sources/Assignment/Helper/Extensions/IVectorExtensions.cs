@@ -25,5 +25,9 @@ namespace Helper.Extensions
                 return hash;
             }
         }
+
+        static public string GetVectorName(this Vector2 value) {
+            return "X" + value.X + "Y" + value.Y;
+        }
     }
 }
